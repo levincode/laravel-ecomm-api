@@ -60,13 +60,23 @@ class AuthController extends Controller
                 ]);
             }
             else {
-                $token = $user->createToken($user->email . '_Token')->plainTextToken;
+
+                if($user->role_as == 1){ // admin = 1
+                    $role = 'admin';
+                    $token = $user->createToken($user->email . '_AdminToken', ['server:admin'])->plainTextToken;
+                }
+                else {
+                    $role = '';
+                    $token = $user->createToken($user->email . '_Token',[''])->plainTextToken;
+                }
+
 
                 return response()->json([
                     'status' => 200,
                     'username' => $user->name,
                     'token' => $token,
                     'message' => 'Logged In Successfully',
+                    'role'=>$role,
                 ]);
             }
         }
@@ -77,8 +87,7 @@ class AuthController extends Controller
         auth()->user()->tokens()->delete();
         return response()->json([
             'status'=>200,
-            'message'=>'Logged Out Successfully'
-
+            'message'=>'Logged Out Successfully',
         ]);
     }
 }

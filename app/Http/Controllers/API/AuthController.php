@@ -40,10 +40,11 @@ class AuthController extends Controller
         }
     }
 
-    public function login(Request $request) {
+    public function login(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            'email'=>'required|max:191',
-            'password'=>'required'
+            'email' => 'required|max:191',
+            'password' => 'required'
         ]);
 
         if ($validator->fails()) {
@@ -53,21 +54,19 @@ class AuthController extends Controller
         } else {
             $user = User::where('email', $request->email)->first();
 
-            if (! $user || ! Hash::check($request->password, $user->password)) {
+            if (!$user || !Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'status' => 401,
-                    'message'=> 'Invalid Credentials'
+                    'message' => 'Invalid Credentials'
                 ]);
-            }
-            else {
+            } else {
 
-                if($user->role_as == 1){ // admin = 1
+                if ($user->role == 1) { // admin = 1
                     $role = 'admin';
                     $token = $user->createToken($user->email . '_AdminToken', ['server:admin'])->plainTextToken;
-                }
-                else {
+                } else {
                     $role = '';
-                    $token = $user->createToken($user->email . '_Token',[''])->plainTextToken;
+                    $token = $user->createToken($user->email . '_Token', [''])->plainTextToken;
                 }
 
 
@@ -76,18 +75,18 @@ class AuthController extends Controller
                     'username' => $user->name,
                     'token' => $token,
                     'message' => 'Logged In Successfully',
-                    'role'=>$role,
+                    'role' => $role,
                 ]);
             }
         }
-
     }
 
-    public function logout() {
+    public function logout()
+    {
         auth()->user()->tokens()->delete();
         return response()->json([
-            'status'=>200,
-            'message'=>'Logged Out Successfully',
+            'status' => 200,
+            'message' => 'Logged Out Successfully',
         ]);
     }
 }

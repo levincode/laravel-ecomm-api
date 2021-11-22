@@ -4,9 +4,14 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\PasswordController;
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+
+// Forgot and reset password routes
+Route::post('forgot', [PasswordController::class,'forgot']);
+Route::post('reset', [PasswordController::class,'reset']);
 
 Route::get('get-category', [FrontendController::class, 'category']);
 Route::get('fetch-products/{slug}', [FrontendController::class, 'product']);

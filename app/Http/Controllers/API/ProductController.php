@@ -41,6 +41,9 @@ class ProductController extends Controller
             'category_id' => 'required',
             'slug' => 'required|max:191',
             'name' => 'required|max:191',
+            'stock' => 'required|numeric|max:1000',
+            'price' => 'required|numeric',
+            'image' => 'image|mimes:jpeg,png,jpg',
         ]);
 
         if ($validator->fails()) {
